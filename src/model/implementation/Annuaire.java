@@ -6,7 +6,7 @@ import model.contrat.IAnnuaire;
 import java.net.Socket;
 import java.util.Hashtable;
 
-public class Annuaire implements IAnnuaire {
+public class Annuaire extends Thread implements IAnnuaire {
 
     private Hashtable <String, Socket> m_socket;
     private Hashtable <String, Thread> m_thread;
@@ -17,7 +17,7 @@ public class Annuaire implements IAnnuaire {
     }
 
     @Override
-    public boolean addClient(String ID, Socket s, Thread t) {
+    public synchronized boolean addClient(String ID, Socket s, Thread t) {
         if (clientIsLogged(ID))   return false;
 
         m_socket.put (ID, s);
@@ -26,7 +26,7 @@ public class Annuaire implements IAnnuaire {
     }
 
     @Override
-    public boolean removeClient(String ID) {
+    public synchronized boolean removeClient(String ID) {
         if (clientIsLogged(ID))   return false;
 
         m_socket.remove(ID);
@@ -41,13 +41,13 @@ public class Annuaire implements IAnnuaire {
 
     // Getters and Setters
     @Override
-    public Socket getSocket(String ID) {
+    public synchronized Socket getSocket(String ID) {
         if (clientIsLogged(ID))   return this.m_socket.get(ID);
         else return null;
     }
 
     @Override
-    public Thread getThread(String ID) {
+    public synchronized Thread getThread(String ID) {
         if (clientIsLogged(ID))   return this.m_thread.get(ID);
         else return null;
     }
