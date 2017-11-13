@@ -9,44 +9,31 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server extends Thread implements IServer  {
+public class Server implements IServer  {
 
-    public static int PORT = 33333;
-
-    private ServerSocket s;
+    private int port;
+    private ServerSocket server_socket;
     private Annuaire clients;
 
     private BufferedReader inFromClient;
     private DataOutputStream outToClient;
 
-    public Server() throws IOException {
+    public Server(int port) throws IOException {
 
         clients = new Annuaire();
-        s = new ServerSocket(PORT);
-
-        Socket client = s.accept();
+        server_socket = new ServerSocket(port);
 
     }
 
-    private BufferedReader read (Socket s ) throws IOException {
-        inFromClient=new BufferedReader((new InputStreamReader(s.getInputStream())))
-        return inFromClient;
-    }
-    private DataOutputStream write (Socket s) throws IOException{
-        outToClient=new DataOutputStream(s.getOutputStream());
-        return outToClient;
+    public void run() throws IOException {
+        Socket client = server_socket.accept();
+
     }
 
-
-    private void clientsubscription(String ID){
+    private void clientsubscription(String ID) {
         System.out.println(ID);
 
     }
-
-
-
-
-
 
 
 }

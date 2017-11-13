@@ -5,42 +5,40 @@ import model.contrat.IClient;
 import java.io.*;
 import java.net.Socket;
 
-public class Client extends Thread implements IClient {
+public class Client implements IClient {
 
-    public static int PORT = 33333;
+    private int port;
     private String name;
-    private Socket s;
+    private Socket socket;
 
-    private DataOutputStream OutToServer;
-    private BufferedReader InFromServeur;
+    private DataOutputStream dOut;
+    private DataInputStream dIn;
 
 
-    public Client(String name){
+    public Client(String name, int port) throws IOException {
 
         this.name = name;
+        this.port = port;
 
-        // Socket
-        try {
-            s = new Socket ("127.0.0.1", PORT);
-        } catch (IOException e) { e.printStackTrace(); }
+    }
 
-        // Buffer write
-        try {
-            OutToServer = new DataOutputStream(s.getOutputStream());
-        } catch (IOException e) {e.printStackTrace(); }
+    public void connexion() throws IOException {
+        socket = new Socket("127.0.0.1", port);
+        dOut = new DataOutputStream(socket.getOutputStream());
+        dIn = new DataInputStream(socket.getInputStream());
+    }
 
-        // Buffer read
-        try {
-            InFromServeur = new BufferedReader(new InputStreamReader(s.getInputStream()));
-        } catch (IOException e) { e.printStackTrace(); }
+    public void subscription() throws IOException {
+        dOut.writeBytes("s:" + this.name);
+        dOut.flush();
     }
 
     public void write (String message) throws IOException {
-        OutToServer.writeBytes(message);
+        dOut.writeBytes(message);
     }
 
     public String read () throws IOException {
-        return InFromServeur.readLine();
+        return dIn.readLine();
     }
 
 }
