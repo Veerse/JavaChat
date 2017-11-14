@@ -9,15 +9,15 @@ import java.util.Hashtable;
 public class Annuaire extends Thread implements IAnnuaire {
 
     private Hashtable <String, Socket> m_socket;
-    private Hashtable <String, Thread> m_thread;
+    private Hashtable <String, ClientThread> m_thread;
 
     public Annuaire(){
         m_socket = new Hashtable <String, Socket> ();
-        m_thread = new Hashtable <String, Thread> ();
+        m_thread = new Hashtable <String, ClientThread> ();
     }
 
     @Override
-    public synchronized boolean addClient(String ID, Socket s, Thread t) {
+    public synchronized boolean addClient(String ID, Socket s, ClientThread t) {
         if (clientIsLogged(ID))   return false;
 
         m_socket.put (ID, s);
@@ -47,7 +47,7 @@ public class Annuaire extends Thread implements IAnnuaire {
     }
 
     @Override
-    public synchronized Thread getThread(String ID) {
+    public synchronized ClientThread getThread(String ID) {
         if (clientIsLogged(ID))   return this.m_thread.get(ID);
         else return null;
     }

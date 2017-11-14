@@ -23,19 +23,50 @@ public class ClientThread implements Runnable{
         this.dis = dis;
         this.dos = dos;
         this.s = s;
-        System.out.println("Handler succesfully built");
+        System.out.println("Handler succesfully built for " + name);
+    }
+
+    public void write(String s) {
+        try { this.dos.writeUTF(s); } catch (IOException e) { e.printStackTrace(); }
     }
 
     @Override
     public void run() {
         String inputMessage;
-        System.out.println("Thread running...");
+        String dest;
+        String messageToDest;
+        System.out.println("Thread running for " + name);
+        write("Welcome to the server " + name + ", messages are sent to all by default. " +
+                "Type [user]:[message] to send a DM.\n" +
+                "Type exit to leave.");
         while (true){
             try {
-                inputMessage = dis.readUTF();
-                System.out.println(inputMessage);
-            } catch (IOException e) { e.printStackTrace(); }
 
+                inputMessage = dis.readUTF();
+                System.out.println(name + " : " + inputMessage);
+
+                // Leaving
+                if (inputMessage.toLowerCase().equals("exit"))  break;
+
+                // Sends a DM if the first char is a @
+                if(inputMessage.charAt(0) == '@'){
+                    dest = (inputMessage.split(" ")[0]).replace("@", "");
+                    messageToDest = inputMessage.replaceFirst(inputMessage.split(" ")[0], "");
+                    Server.userlist.getThread(dest).write(name + " :" + messageToDest);
+                }
+
+                // TODO send a message to ALL, CLIENT PART, Proper connexion ending
+
+            }catch (IOException e)
+                { e.printStackTrace(); }
+
+        }
+        System.out.println(name + " left");
+
+        try {
+            s.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
