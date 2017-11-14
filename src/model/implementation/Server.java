@@ -1,39 +1,47 @@
 package model.implementation;
 
+import model.contrat.IClientThread;
 import model.contrat.IServer;
 
-import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server implements IServer  {
+public class Server implements IServer {
 
-    private int port;
-    private ServerSocket server_socket;
-    private Annuaire clients;
+    ServerSocket serverSocket;
+    Socket s;
 
-    private BufferedReader inFromClient;
-    private DataOutputStream outToClient;
-
-    public Server(int port) throws IOException {
-
-        clients = new Annuaire();
-        server_socket = new ServerSocket(port);
-
+    public Server (int port) {
+        try {
+            serverSocket = new ServerSocket(port);
+        } catch (IOException e) { e.printStackTrace(); }
+        System.out.println("Server socket created on port " + port);
     }
 
-    public void run() throws IOException {
-        Socket client = server_socket.accept();
+    public void start () throws IOException {
+        Socket s;
 
+        while (true){
+            s = serverSocket.accept();
+            System.out.println("Someone has connected");
+
+            DataInputStream dis = new DataInputStream(s.getInputStream());
+            DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+
+            System.out.println("Creating a handler...");
+            ClientThread c_t = new ClientThread (s, "test", dis, dos);
+
+            Thread t = new Thread(c_t);
+            System.out.println("Starting the thread...");
+            t.start();
+        }
     }
 
-    private void clientsubscription(String ID) {
-        System.out.println(ID);
-
+    public void close (){
+        try { serverSocket.close(); } catch (IOException e) { e.printStackTrace(); }
+        System.out.println("Server closed");
     }
-
-
 }
