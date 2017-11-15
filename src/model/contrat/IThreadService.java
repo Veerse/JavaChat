@@ -6,5 +6,7 @@ package model.contrat;
 public interface IThreadService {
 
     void write(String s);
-
+    void sendAll(String message);
+    void printLoggedInUsers();
+    void prepareToExit();
 }

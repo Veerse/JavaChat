@@ -26,11 +26,12 @@ public class Client implements IClient {
 
         dis = new DataInputStream(s.getInputStream());
         dos = new DataOutputStream(s.getOutputStream());
-
+        // boolean stop=false;
         sendMsg = new Thread(new Runnable(){
             @Override
             public void run() {
                 while (true) {
+
                     String msg = scn.nextLine();
                     try { dos.writeUTF(msg); } catch (IOException e) { e.printStackTrace(); }
                 }
@@ -42,7 +43,12 @@ public class Client implements IClient {
             public void run() {
                 while (true) {
                     try {
+
                         String msg = dis.readUTF();
+                        if("@exit".equals(msg)){
+
+                            return;
+                        }
                         System.out.println(msg);
                     } catch (IOException e) { e.printStackTrace(); }
                 }

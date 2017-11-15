@@ -5,6 +5,7 @@ import model.contrat.IAnnuaire;
 
 import java.net.Socket;
 import java.util.Hashtable;
+import java.util.Set;
 
 public class Annuaire extends Thread implements IAnnuaire {
 
@@ -27,10 +28,11 @@ public class Annuaire extends Thread implements IAnnuaire {
 
     @Override
     public synchronized boolean removeClient(String ID) {
-        if (clientIsLogged(ID))   return false;
+        if (!clientIsLogged(ID))   return false;
 
         m_socket.remove(ID);
         m_thread.remove(ID);
+        System.out.println(ID + " has disconnected.");
         return true;
     }
 
@@ -51,5 +53,13 @@ public class Annuaire extends Thread implements IAnnuaire {
         if (clientIsLogged(ID))   return this.m_thread.get(ID);
         else return null;
     }
+
+    @Override
+    public synchronized Set<String>  getAllThreads() {
+        return this.m_thread.keySet();
+    }
+
+
+
 
 }

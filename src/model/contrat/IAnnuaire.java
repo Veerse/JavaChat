@@ -3,6 +3,7 @@ package model.contrat;
 import model.implementation.ThreadService;
 
 import java.net.Socket;
+import java.util.Set;
 
 public interface IAnnuaire {
 
@@ -16,5 +17,6 @@ public interface IAnnuaire {
     // Getters and Setters
     Socket getSocket(String ID);
     ThreadService getThread(String ID);
+    Set<String>  getAllThreads();
 
 }
