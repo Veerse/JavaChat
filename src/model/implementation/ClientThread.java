@@ -36,8 +36,8 @@ public class ClientThread implements Runnable{
         String dest;
         String messageToDest;
         System.out.println("Thread running for " + name);
-        write("Welcome to the server " + name + ", messages are sent to all by default. " +
-                "Type [user]:[message] to send a DM.\n" +
+        write("Welcome to the server " + name + ", your messages are sent to all by default. " +
+                "Type @[user] [message] to send a DM.\n" +
                 "Type exit to leave.");
         while (true){
             try {
@@ -52,7 +52,9 @@ public class ClientThread implements Runnable{
                 if(inputMessage.charAt(0) == '@'){
                     dest = (inputMessage.split(" ")[0]).replace("@", "");
                     messageToDest = inputMessage.replaceFirst(inputMessage.split(" ")[0], "");
-                    Server.userlist.getThread(dest).write(name + " :" + messageToDest);
+                    // Test if the recipient is connected before sending the DM
+                    if (Server.userlist.clientIsLogged(dest))
+                        Server.userlist.getThread(dest).write(name + " :" + messageToDest);
                 }
 
                 // TODO send a message to ALL, CLIENT PART, Proper connexion ending
