@@ -1,6 +1,6 @@
 package model.implementation;
 
-import model.contrat.IClientThread;
+import model.contrat.IThreadService;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class ClientThread implements Runnable{
+public class ThreadService implements Runnable, IThreadService{
 
     Scanner scn;
     private String name;
@@ -17,7 +17,7 @@ public class ClientThread implements Runnable{
     Socket s;
 
 
-    public ClientThread (Socket s, String name, DataInputStream dis, DataOutputStream dos) {
+    public ThreadService(Socket s, String name, DataInputStream dis, DataOutputStream dos) {
         scn = new Scanner(System.in);
         this.name = name;
         this.dis = dis;
@@ -26,6 +26,7 @@ public class ClientThread implements Runnable{
         System.out.println("Handler succesfully built for " + name);
     }
 
+    @Override
     public void write(String s) {
         try { this.dos.writeUTF(s); } catch (IOException e) { e.printStackTrace(); }
     }

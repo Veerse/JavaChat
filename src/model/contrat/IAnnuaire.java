@@ -1,14 +1,13 @@
 package model.contrat;
 
-import model.implementation.ClientThread;
+import model.implementation.ThreadService;
 
 import java.net.Socket;
-import java.util.Hashtable;
 
 public interface IAnnuaire {
 
     // Subscribe/Unsuscribe
-    boolean addClient(String ID, Socket s, ClientThread t);
+    boolean addClient(String ID, Socket s, ThreadService t);
     boolean removeClient(String ID);
 
     // Other methods
@@ -16,6 +15,6 @@ public interface IAnnuaire {
 
     // Getters and Setters
     Socket getSocket(String ID);
-    ClientThread getThread(String ID);
+    ThreadService getThread(String ID);
 
 }

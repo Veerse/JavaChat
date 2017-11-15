@@ -1,6 +1,5 @@
 package model.implementation;
 
-import model.contrat.IClientThread;
 import model.contrat.IServer;
 
 import java.io.DataInputStream;
@@ -41,7 +40,7 @@ public class Server implements IServer {
 
             // Creates the service thread
             System.out.print("Creating a handler...");
-            ClientThread c_t = new ClientThread (s, name, dis, dos);
+            ThreadService c_t = new ThreadService(s, name, dis, dos);
 
             // Starts the thread
             System.out.print("Starting the thread...");
